@@ -1867,73 +1867,33 @@ img {
 }
 
 .work-track {
-
-  display: flex;
-
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 22px;
-
-  overflow-x: auto;
-
+  overflow: hidden;
   padding: 4px 2px 14px;
-
-  scroll-snap-type: x mandatory;
-
-  scrollbar-width: none;
-
-}
-
-.work-track::-webkit-scrollbar {
-
-  display: none;
-
 }
 
 .work-card {
-
   position: relative;
-
-  flex:
-
-    0 0
-
-    calc((100% - 44px) / 3);
-
+  display: none;
   min-width: 0;
-
   overflow: hidden;
-
   background-color: #ffffff;
-
   border-radius: 13px;
-
   box-shadow:
-
     0 7px 22px
-
     rgba(0, 0, 0, 0.08);
+}
 
-  scroll-snap-align: start;
-
+.work-card.is-visible {
+  display: block;
 }
 
 .work-card img {
-
+  width: 100%;
   height: 270px;
-
   object-fit: cover;
-
-}
-
-.work-card-caption {
-
-  padding: 15px 17px;
-
-  color: #153b73;
-
-  font-size: 15px;
-
-  font-weight: 700;
-
 }
 
 .work-arrow {
@@ -2991,15 +2951,8 @@ img {
     gap: 40px;
 
   }
-
-  .work-card {
-
-    flex:
-
-      0 0
-
-      calc((100% - 22px) / 2);
-
+  .work-track {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .about-story-container,
@@ -3681,11 +3634,8 @@ img {
     padding: 28px;
 
   }
-
-  .work-card {
-
-    flex: 0 0 86%;
-
+  .work-track {
+    grid-template-columns: 1fr;
   }
 
   .work-card img {

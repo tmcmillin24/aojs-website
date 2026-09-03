@@ -397,11 +397,6 @@ function setupWorkCarousel() {
   const nextButton =
     document.getElementById("work-next");
 
-
-  /*
-    Only About page contains carousel.
-  */
-
   if (
     !track ||
     !previousButton ||
@@ -410,113 +405,161 @@ function setupWorkCarousel() {
     return;
   }
 
+  const cards =
+    Array.from(
+      track.querySelectorAll(".work-card")
+    );
 
-  function moveCarousel(direction) {
+  if (cards.length === 0) {
+    return;
+  }
 
-    const amount =
-      track.clientWidth * 0.82;
+  let startIndex = 0;
 
 
-    track.scrollBy({
+  function getCardsPerPage() {
 
-      left:
-        direction * amount,
+    if (
+      window.matchMedia(
+        "(max-width: 768px)"
+      ).matches
+    ) {
+      return 1;
+    }
 
-      behavior:
-        "smooth"
+    if (
+      window.matchMedia(
+        "(max-width: 1000px)"
+      ).matches
+    ) {
+      return 2;
+    }
 
-    });
+    return 3;
+  }
 
+
+  function showCards() {
+
+    const cardsPerPage =
+      getCardsPerPage();
+
+    const maxStart =
+      Math.max(
+        0,
+        cards.length -
+        cardsPerPage
+      );
+
+    startIndex =
+      Math.min(
+        Math.max(startIndex, 0),
+        maxStart
+      );
+
+    const endIndex =
+      startIndex +
+      cardsPerPage;
+
+    cards.forEach(
+      (card, index) => {
+
+        const visible =
+          index >= startIndex &&
+          index < endIndex;
+
+        card.classList.toggle(
+          "is-visible",
+          visible
+        );
+
+        card.setAttribute(
+          "aria-hidden",
+          visible
+            ? "false"
+            : "true"
+        );
+      }
+    );
   }
 
 
   previousButton.addEventListener(
     "click",
-    () => moveCarousel(-1)
+    () => {
+
+      const cardsPerPage =
+        getCardsPerPage();
+
+      const maxStart =
+        Math.max(
+          0,
+          cards.length -
+          cardsPerPage
+        );
+
+      if (startIndex <= 0) {
+        startIndex = maxStart;
+      } else {
+        startIndex -= 1;
+      }
+
+      showCards();
+    }
   );
 
 
   nextButton.addEventListener(
     "click",
-    () => moveCarousel(1)
+    () => {
+
+      const cardsPerPage =
+        getCardsPerPage();
+
+      const maxStart =
+        Math.max(
+          0,
+          cards.length -
+          cardsPerPage
+        );
+
+      if (
+        startIndex >=
+        maxStart
+      ) {
+        startIndex = 0;
+      } else {
+        startIndex += 1;
+      }
+
+      showCards();
+    }
   );
 
 
-  const reduceMotion =
-    window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+  let resizeTimer;
 
+  window.addEventListener(
+    "resize",
+    () => {
 
-  if (!reduceMotion) {
-
-    setInterval(() => {
-
-      const reachedEnd =
-        track.scrollLeft +
-        track.clientWidth >=
-        track.scrollWidth - 10;
-
-
-      if (reachedEnd) {
-
-        track.scrollTo({
-
-          left: 0,
-          behavior: "smooth"
-
-        });
-
-      } else {
-
-        moveCarousel(1);
-
-      }
-
-    }, 6500);
-
-  }
-
-}
-
-
-/* ==================================================
-   TURNSTILE TOKEN
-================================================== */
-
-function getTurnstileToken(formData) {
-
-  return String(
-    formData.get("cf-turnstile-response") || ""
-  )
-    .trim();
-
-}
-
-
-function resetTurnstileWidget(form) {
-
-  if (
-    window.turnstile &&
-    typeof window.turnstile.reset === "function"
-  ) {
-
-    const widget =
-      form.querySelector(
-        ".cf-turnstile"
+      window.clearTimeout(
+        resizeTimer
       );
 
-
-    if (widget) {
-
-      window.turnstile.reset(
-        widget
-      );
-
+      resizeTimer =
+        window.setTimeout(
+          () => {
+            startIndex = 0;
+            showCards();
+          },
+          150
+        );
     }
+  );
 
-  }
 
+  showCards();
 }
 
 
@@ -648,23 +691,9 @@ function setupCareerForm() {
             ),
 
           message:
-            formData.get("message"),
-
-          turnstileToken:
-            getTurnstileToken(
-              formData
-            )
+            formData.get("message")
 
         };
-
-
-        if (!application.turnstileToken) {
-
-          throw new Error(
-            "Please complete the CAPTCHA."
-          );
-
-        }
 
 
         const response =
@@ -734,11 +763,6 @@ function setupCareerForm() {
 
 
       } finally {
-
-        resetTurnstileWidget(
-          form
-        );
-
 
         submitButton.disabled =
           false;
@@ -832,23 +856,9 @@ function setupContactForm() {
             formData.get("email"),
 
           message:
-            formData.get("message"),
-
-          turnstileToken:
-            getTurnstileToken(
-              formData
-            )
+            formData.get("message")
 
         };
-
-
-        if (!contactData.turnstileToken) {
-
-          throw new Error(
-            "Please complete the CAPTCHA."
-          );
-
-        }
 
 
         const response =
@@ -918,11 +928,6 @@ function setupContactForm() {
 
 
       } finally {
-
-        resetTurnstileWidget(
-          form
-        );
-
 
         submitButton.disabled =
           false;
@@ -1092,23 +1097,9 @@ function setupQuoteForm() {
           additional:
             formData.get(
               "additional"
-            ),
-
-          turnstileToken:
-            getTurnstileToken(
-              formData
             )
 
         };
-
-
-        if (!quoteData.turnstileToken) {
-
-          throw new Error(
-            "Please complete the CAPTCHA."
-          );
-
-        }
 
 
         const response =
@@ -1179,11 +1170,6 @@ function setupQuoteForm() {
 
 
       } finally {
-
-        resetTurnstileWidget(
-          form
-        );
-
 
         submitButton.disabled =
           false;
