@@ -691,7 +691,10 @@ function setupCareerForm() {
             ),
 
           message:
-            formData.get("message")
+            formData.get("message"),
+
+          turnstileToken:
+            formData.get("cf-turnstile-response")
 
         };
 
@@ -856,7 +859,10 @@ function setupContactForm() {
             formData.get("email"),
 
           message:
-            formData.get("message")
+            formData.get("message"),
+
+          turnstileToken:
+            formData.get("cf-turnstile-response")
 
         };
 
@@ -1097,7 +1103,14 @@ function setupQuoteForm() {
           additional:
             formData.get(
               "additional"
+            ),
+
+          turnstileToken:
+	    formData.get(
+              "cf-turnstile-response"
             )
+
+
 
         };
 
