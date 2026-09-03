@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://aojsinc.us/sitemap.xml
+Sitemap: https://www.alloverjanitorialservices.com/sitemap.xml
