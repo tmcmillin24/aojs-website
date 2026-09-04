@@ -214,7 +214,7 @@ async function loadGoogleReviews() {
     if (data.rating) {
 
       ratingDisplay.textContent =
-        `${data.rating} on Google Â· ${data.reviewCount} reviews`;
+        `${data.rating} on Google · ${data.reviewCount} reviews`;
 
     } else {
 
@@ -324,7 +324,7 @@ async function loadGoogleReviews() {
         </div>
 
         <p class="review-text">
-          â€œ${escapeHTML(safeText)}â€
+          “${escapeHTML(safeText)}”
         </p>
 
         <div class="review-author">
@@ -793,7 +793,7 @@ function setupCareerForm() {
 
         submitButton.innerHTML = `
           Submit Application
-          <span>â†’</span>
+          <span>→</span>
         `;
 
       }
@@ -961,7 +961,7 @@ function setupContactForm() {
 
         submitButton.innerHTML = `
           Send Message
-          <span>â†’</span>
+          <span>→</span>
         `;
 
       }
@@ -1211,7 +1211,7 @@ function setupQuoteForm() {
         submitButton.innerHTML =
           `
             Submit Quote Request
-            <span>â†’</span>
+            <span>→</span>
           `;
 
       }
@@ -1280,8 +1280,8 @@ function createStars(rating) {
 
     stars +=
       i <= roundedRating
-        ? "â˜…"
-        : "â˜†";
+        ? "★"
+        : "☆";
 
   }
 
