@@ -1890,6 +1890,52 @@ img {
   display: block;
 }
 
+
+@keyframes workSlideNext {
+  from {
+    opacity: 0;
+    transform: translateX(34px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes workSlidePrevious {
+  from {
+    opacity: 0;
+    transform: translateX(-34px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.work-track.slide-next .work-card.is-visible {
+  animation:
+    workSlideNext 320ms
+    cubic-bezier(0.22, 1, 0.36, 1)
+    both;
+}
+
+.work-track.slide-prev .work-card.is-visible {
+  animation:
+    workSlidePrevious 320ms
+    cubic-bezier(0.22, 1, 0.36, 1)
+    both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-track.slide-next .work-card.is-visible,
+  .work-track.slide-prev .work-card.is-visible {
+    animation: none;
+  }
+}
+
 .work-card img {
   width: 100%;
   height: 270px;
@@ -3436,14 +3482,15 @@ img {
   .hero-content h1 {
 
     font-size:
+      clamp(30px, 9vw, 44px);
 
-      clamp(38px, 10vw, 52px);
+    line-height: 1.03;
 
   }
 
   .hero-content h1 span {
 
-    white-space: normal;
+    white-space: nowrap;
 
   }
 
@@ -3646,7 +3693,22 @@ img {
 
   .work-arrow {
 
-    display: none;
+    display: flex;
+    width: 38px;
+    height: 38px;
+    font-size: 28px;
+
+  }
+
+  .work-arrow-left {
+
+    left: 8px;
+
+  }
+
+  .work-arrow-right {
+
+    right: 8px;
 
   }
 
@@ -4900,3 +4962,55 @@ img {
   }
 
 }
+
+/* ==================================================
+   TM WEB DESIGN FOOTER BRANDING
+================================================== */
+
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.footer-bottom p {
+  margin: 0;
+}
+
+.footer-designer-brand {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+.footer-designer-brand img {
+  display: block;
+  width: 165px;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+
+  .footer-bottom {
+    flex-direction: column;
+    justify-content: center;
+    gap: 14px;
+    text-align: center;
+  }
+
+  .footer-designer-brand {
+    margin-left: 0;
+    justify-content: center;
+  }
+
+  .footer-designer-brand img {
+    width: 145px;
+  }
+
+}
+

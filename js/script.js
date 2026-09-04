@@ -214,7 +214,7 @@ async function loadGoogleReviews() {
     if (data.rating) {
 
       ratingDisplay.textContent =
-        `${data.rating} on Google · ${data.reviewCount} reviews`;
+        `${data.rating} on Google Â· ${data.reviewCount} reviews`;
 
     } else {
 
@@ -324,7 +324,7 @@ async function loadGoogleReviews() {
         </div>
 
         <p class="review-text">
-          “${escapeHTML(safeText)}”
+          â€œ${escapeHTML(safeText)}â€
         </p>
 
         <div class="review-author">
@@ -414,10 +414,15 @@ function setupWorkCarousel() {
     return;
   }
 
+  const reduceMotion =
+    window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
   let startIndex = 0;
 
 
-  function getCardsPerPage() {
+  function getCardsPerView() {
 
     if (
       window.matchMedia(
@@ -439,17 +444,25 @@ function setupWorkCarousel() {
   }
 
 
-  function showCards() {
+  function getMaxStart() {
 
-    const cardsPerPage =
-      getCardsPerPage();
+    return Math.max(
+      0,
+      cards.length -
+      getCardsPerView()
+    );
+  }
+
+
+  function renderCarousel(
+    direction = null
+  ) {
+
+    const cardsPerView =
+      getCardsPerView();
 
     const maxStart =
-      Math.max(
-        0,
-        cards.length -
-        cardsPerPage
-      );
+      getMaxStart();
 
     startIndex =
       Math.min(
@@ -457,83 +470,90 @@ function setupWorkCarousel() {
         maxStart
       );
 
-    const endIndex =
-      startIndex +
-      cardsPerPage;
+    track.classList.remove(
+      "slide-next",
+      "slide-prev"
+    );
 
     cards.forEach(
       (card, index) => {
 
-        const visible =
+        const isVisible =
           index >= startIndex &&
-          index < endIndex;
+          index < startIndex + cardsPerView;
 
         card.classList.toggle(
           "is-visible",
-          visible
+          isVisible
         );
 
         card.setAttribute(
           "aria-hidden",
-          visible
+          isVisible
             ? "false"
             : "true"
         );
       }
     );
+
+    if (
+      direction &&
+      !reduceMotion
+    ) {
+
+      /*
+        Force the browser to register the
+        class removal before re-adding the
+        directional animation class.
+      */
+
+      void track.offsetWidth;
+
+      track.classList.add(
+        direction === "next"
+          ? "slide-next"
+          : "slide-prev"
+      );
+    }
+  }
+
+
+  function movePrevious() {
+
+    const maxStart =
+      getMaxStart();
+
+    startIndex =
+      startIndex <= 0
+        ? maxStart
+        : startIndex - 1;
+
+    renderCarousel("previous");
+  }
+
+
+  function moveNext() {
+
+    const maxStart =
+      getMaxStart();
+
+    startIndex =
+      startIndex >= maxStart
+        ? 0
+        : startIndex + 1;
+
+    renderCarousel("next");
   }
 
 
   previousButton.addEventListener(
     "click",
-    () => {
-
-      const cardsPerPage =
-        getCardsPerPage();
-
-      const maxStart =
-        Math.max(
-          0,
-          cards.length -
-          cardsPerPage
-        );
-
-      if (startIndex <= 0) {
-        startIndex = maxStart;
-      } else {
-        startIndex -= 1;
-      }
-
-      showCards();
-    }
+    movePrevious
   );
-
 
   nextButton.addEventListener(
     "click",
-    () => {
-
-      const cardsPerPage =
-        getCardsPerPage();
-
-      const maxStart =
-        Math.max(
-          0,
-          cards.length -
-          cardsPerPage
-        );
-
-      if (
-        startIndex >=
-        maxStart
-      ) {
-        startIndex = 0;
-      } else {
-        startIndex += 1;
-      }
-
-      showCards();
-    }
+    moveNext
   );
 
 
@@ -551,7 +571,7 @@ function setupWorkCarousel() {
         window.setTimeout(
           () => {
             startIndex = 0;
-            showCards();
+            renderCarousel();
           },
           150
         );
@@ -559,7 +579,7 @@ function setupWorkCarousel() {
   );
 
 
-  showCards();
+  renderCarousel();
 }
 
 
@@ -773,7 +793,7 @@ function setupCareerForm() {
 
         submitButton.innerHTML = `
           Submit Application
-          <span>→</span>
+          <span>â†’</span>
         `;
 
       }
@@ -941,7 +961,7 @@ function setupContactForm() {
 
         submitButton.innerHTML = `
           Send Message
-          <span>→</span>
+          <span>â†’</span>
         `;
 
       }
@@ -1191,7 +1211,7 @@ function setupQuoteForm() {
         submitButton.innerHTML =
           `
             Submit Quote Request
-            <span>→</span>
+            <span>â†’</span>
           `;
 
       }
@@ -1260,8 +1280,8 @@ function createStars(rating) {
 
     stars +=
       i <= roundedRating
-        ? "★"
-        : "☆";
+        ? "â˜…"
+        : "â˜†";
 
   }
 
